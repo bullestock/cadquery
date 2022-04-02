@@ -5,14 +5,14 @@ tube_r = 10 # tube radius
 nozzle_h = 5
 length = 20
 wth = 2 # tube wall thickness
-ring_h = 3
+ring_h = 5
 
 #rr = cq.Workplane("XY").rect(tube_r, 5).fillet(1)
 
-ring = cq.Workplane("XY").circle(tube_r).extrude(ring_h).faces("<Z or > Z").shell(-wth)
+ring = cq.Workplane("XY").circle(tube_r-0.5).extrude(ring_h).faces("<Z or > Z").shell(-wth)
 
 outer = (cq.Workplane("XY").
-    circle(tube_r + 2*wth). # circular bottom
+    circle(tube_r + wth). # circular bottom
     workplane(offset=length).transformed(offset=(0, tube_r+wth, 0)).
     rect(tube_r, nozzle_h). # rectangular top
     loft(combine=True).     # combine
