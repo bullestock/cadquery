@@ -1,5 +1,4 @@
 import cadquery as cq
-import math
 
 tube_r = 10 # tube radius
 nozzle_h = 5
@@ -9,7 +8,7 @@ ring_h = 5
 
 #rr = cq.Workplane("XY").rect(tube_r, 5).fillet(1)
 
-ring = cq.Workplane("XY").circle(tube_r-0.5).extrude(ring_h).faces("<Z or > Z").shell(-wth)
+ring = cq.Workplane("XY").circle(tube_r-0.2).extrude(ring_h).faces("<Z or > Z").shell(-wth)
 
 outer = (cq.Workplane("XY").
     circle(tube_r + wth). # circular bottom
