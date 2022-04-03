@@ -11,7 +11,7 @@ upper_block_h = 3
 oh = 3 # overhang of upper block
 block_w = 85
 
-arc_r = 25
+arc_r = 35
 arc_x = block_w - (arc_r - arc_r*math.cos(math.radians(45)))
 arc_y = arc_r - arc_r*math.sin(math.radians(45))
 
@@ -26,9 +26,9 @@ block = (cq.Workplane("XY")
 
 upper_block = (cq.Sketch()
          .segment((-5.,0), (-5, 5+oh))
-         .segment((30, 5+oh))
-         .segment((50-oh, 25))
-         .segment((50-oh, 55))
+         .segment((30+oh, 5+oh))
+         .segment((50-2*oh, 25-oh))
+         .segment((50-2*oh, 55))
          .segment((block_w, 55))
          .segment((block_w, arc_r))
          .arc((block_w, arc_r), (arc_x, arc_y), (block_w-arc_r, 0))
