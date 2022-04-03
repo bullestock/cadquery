@@ -11,6 +11,10 @@ upper_block_h = 3
 oh = 3 # overhang of upper block
 block_w = 85
 
+arc_r = 25
+arc_x = block_w - (arc_r - arc_r*math.cos(math.radians(45)))
+arc_y = arc_r - arc_r*math.sin(math.radians(45))
+
 pts = [(-5, 0), (-5, 5), (30, 5), (50, 25), (50, 55), (block_w, 55), (block_w, 25)]
 
 pts2 = [(-5, 0), (-5, 5+oh), (30, 5+oh), (50-oh, 25), (50-oh, 55), (block_w, 55), (block_w, 25)]
@@ -33,17 +37,16 @@ upper_block = (cq.Sketch()
          .segment((50-oh, 55))
          .segment((block_w, 55))
          .segment((block_w, 25))
-         .segment((50, 0))
+         #.spline(s_pts, tangents=t_pts)
+         #.segment((30, 0))
+         .arc((block_w, arc_r), (arc_x, arc_y), (block_w-arc_r, 0))
          .close().assemble()
-         #.extrude(upper_block_h)
         )
 
 arcf = shr*math.cos(math.radians(45))
 
 result = (
-    block.faces(">Z")
-    .transformed(offset=(67.5, 30, 0))
-    .circle(tube_r+wth+0.5).cutThruAll()
+    block
     .faces("<Y").workplane(centerOption='CenterOfBoundBox')
     .transformed(offset=(-12, 0, 0))
     .threePointArc((shr-arcf, arcf), (shr, shr))
@@ -54,6 +57,9 @@ result = (
     .faces(">Z").workplane()
     .transformed(offset=(0, 0, 0))
     .placeSketch(upper_block).extrude(upper_block_h)
+    .faces(">Z")
+    .transformed(offset=(67.5, 30, 0))
+    .circle(tube_r+wth+0.5).cutThruAll()
 )
 
 show_object(result)
