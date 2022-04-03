@@ -15,17 +15,11 @@ arc_r = 25
 arc_x = block_w - (arc_r - arc_r*math.cos(math.radians(45)))
 arc_y = arc_r - arc_r*math.sin(math.radians(45))
 
-pts = [(-5, 0), (-5, 5), (30, 5), (50, 25), (50, 55), (block_w, 55), (block_w, 25)]
+pts = [(-5, 0), (-5, 5), (30, 5), (50, 25), (50, 55), (block_w, 55), (block_w, arc_r)]
 
-pts2 = [(-5, 0), (-5, 5+oh), (30, 5+oh), (50-oh, 25), (50-oh, 55), (block_w, 55), (block_w, 25)]
-
-s_pts =  [(block_w, 25), (30, 0)]
-
-t_pts = [(0, -1), (-1, 0)]
- 
 block = (cq.Workplane("XY")
          .polyline(pts)
-         .spline(s_pts, tangents=t_pts)
+         .threePointArc((arc_x, arc_y), (block_w-arc_r, 0))
          .close()
          .extrude(block_h)
         )
@@ -36,9 +30,7 @@ upper_block = (cq.Sketch()
          .segment((50-oh, 25))
          .segment((50-oh, 55))
          .segment((block_w, 55))
-         .segment((block_w, 25))
-         #.spline(s_pts, tangents=t_pts)
-         #.segment((30, 0))
+         .segment((block_w, arc_r))
          .arc((block_w, arc_r), (arc_x, arc_y), (block_w-arc_r, 0))
          .close().assemble()
         )
@@ -46,21 +38,25 @@ upper_block = (cq.Sketch()
 arcf = shr*math.cos(math.radians(45))
 
 result = (
+    # place lower block
     block
     .faces("<Y").workplane(centerOption='CenterOfBoundBox')
     .transformed(offset=(-12, 0, 0))
+    # construct elongated screw hole
     .threePointArc((shr-arcf, arcf), (shr, shr))
     .hLine(shw)
     .threePointArc((shr+shw+arcf, arcf), (shr+shw+shr, 0))
     .mirrorX()
     .cutThruAll()
-    .faces(">Z").workplane()
+    # put upper block on top
+    .faces(">Z").workplane(origin=(0, 0, 0))
     .transformed(offset=(0, 0, 0))
     .placeSketch(upper_block).extrude(upper_block_h)
+    # make tube hole
     .faces(">Z")
     .transformed(offset=(67.5, 30, 0))
     .circle(tube_r+wth+0.5).cutThruAll()
 )
 
 show_object(result)
-#show_object(upper_block)
+
