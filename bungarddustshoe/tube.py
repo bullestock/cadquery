@@ -27,24 +27,16 @@ tby =  by + math.sin(math.radians(a2))*r2
 # position of top of final bend
 fbtx = tbx + r2
 fbty = tby
-#fbthelper = cq.Workplane("XZ" ).hLine(fbtx).vLine(tby).consolidateWires()
 
 # position of middle of final bend
 fbmx = tbx + math.cos(math.radians(a2/2))*r2
 fbmy = tby - math.sin(math.radians(a2/2))*r2
-#fbmhelper = cq.Workplane("XZ" ).hLine(fbmx).vLine(fbmy).consolidateWires()
 
-ap3 = (fbmx, fbmy)
-ap4 = (fbtx, fbty)
+# create path
+path = cq.Workplane("XZ" ).vLine(d1).threePointArc(ap1, ap2).polarLine(d2, 90 - a1)
 
-#helper2 = cq.Workplane("XZ" ).hLine(ap3[0]).vLine(ap3[1]).consolidateWires()
-
-#helper3 = cq.Workplane("XZ" ).hLine(ap4[0]).vLine(ap4[1]).consolidateWires()
-
-path = cq.Workplane("XZ" ).vLine(d1).threePointArc(ap1, ap2).polarLine(d2, 90 - a1)#.threePointArc(ap3, ap4).consolidateWires()
-
+# create tube by sweeping along path
 tube = cq.Workplane("XY").circle(tube_r).sweep(path).faces(">Z or <Z").shell(wth)
 
 show_object(tube)
 
-cq.exporters.export(tube,'bungardtube.stl')
