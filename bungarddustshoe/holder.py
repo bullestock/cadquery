@@ -22,7 +22,7 @@ arc_r = 35
 arc_x = block_w - (arc_r - arc_r*math.cos(math.radians(45)))
 arc_y = arc_r - arc_r*math.sin(math.radians(45))
 
-pts = [(-5, 0), (-5, 5), (30, 5), (50, 25), (50, 55), (block_w, 55), (block_w, arc_r)]
+pts = [(-5, 0), (-5, 5), (30, 5), (50, 25), (50, 58), (block_w, 58), (block_w, arc_r)]
 
 # lower block
 block = (cq.Workplane("XY")
@@ -37,9 +37,9 @@ upper_block = (cq.Sketch()
                # annoyingly, polyline is not supported for sketch
                .segment((-5.,0), (-5, 5+oh))
                .segment((30+oh, 5+oh))
-               .segment((50-2*oh, 25-2*oh))
-               .segment((50-2*oh, 55))
-               .segment((block_w, 55))
+               .segment((50-2.5*oh, 25-2.5*oh))
+               .segment((50-2.5*oh, 58))
+               .segment((block_w, 58))
                .segment((block_w, arc_r))
                # arc, not threePointArc
                .arc((block_w, arc_r), (arc_x, arc_y), (block_w-arc_r, 0))
@@ -73,17 +73,22 @@ result = (
     .placeSketch(upper_block).extrude(upper_block_h)
     # make tube hole
     .faces(">Z")
-    .transformed(offset=(67.5, 30, 0))
+    .transformed(offset=(67.5, 40, 0))
     .tag("tubehole")
-    .circle(tube_r+wth+0.2).cutThruAll()
+    .circle(tube_r+wth+0.15).cutThruAll()
     # fixing screw hole
     .workplaneFromTagged("tubehole")
     .transformed(offset=(0, 0, -block_h/2), rotate=(0, -90, 0))
     .circle(2).cutBlind(-3*tube_r)
     # nut hole
     .workplaneFromTagged("tubehole")
-    .transformed(offset=(tube_r+3*wth, 0, -block_h/2+nut_r1))
+    .transformed(offset=(tube_r+3.5*wth, 0, -block_h/2+nut_r1))
     .rect(nut_th, 2*nut_r2).cutBlind(-20)
+    # cutout for Kress
+    .workplaneFromTagged("tubehole")
+    .transformed(offset=(-25, 0, 0))
+    .circle(6)
+    .cutThruAll()
 )
 
 show_object(result)
