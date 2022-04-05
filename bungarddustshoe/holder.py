@@ -6,6 +6,11 @@ wth = 2 # tube wall thickness
 shr = 2.7 # screw hole radius
 shw = 10 # screw hole extra width
 
+# dimensions of M8 fixing nut
+nut_r1 = 6.5
+nut_r2 = 7.5
+nut_th = 6.5
+
 block_h = 20
 upper_block_h = 3
 oh = 3 # overhang of upper block
@@ -69,7 +74,16 @@ result = (
     # make tube hole
     .faces(">Z")
     .transformed(offset=(67.5, 30, 0))
+    .tag("tubehole")
     .circle(tube_r+wth+0.2).cutThruAll()
+    # fixing screw hole
+    .workplaneFromTagged("tubehole")
+    .transformed(offset=(0, 0, -block_h/2), rotate=(0, -90, 0))
+    .circle(2).cutBlind(-3*tube_r)
+    # nut hole
+    .workplaneFromTagged("tubehole")
+    .transformed(offset=(tube_r+3*wth, 0, -block_h/2+nut_r1))
+    .rect(nut_th, 2*nut_r2).cutBlind(-20)
 )
 
 show_object(result)
