@@ -79,7 +79,7 @@ result = (
     # fixing screw hole
     .workplaneFromTagged("tubehole")
     .transformed(offset=(0, 0, -block_h/2), rotate=(0, -90, 0))
-    .circle(2).cutBlind(-3*tube_r)
+    .circle(4.5).cutBlind(-3*tube_r)
     # nut hole
     .workplaneFromTagged("tubehole")
     .transformed(offset=(tube_r+3.5*wth, 0, -block_h/2+nut_r1))
