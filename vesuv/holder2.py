@@ -24,6 +24,11 @@ result = (cq.Workplane("XZ")
           .slot2D(2*d1, d1, 90)
           .cutThruAll()
           .edges("|Z or >Z or >Y").fillet(1)
+          # mounting holes
+          .workplaneFromTagged("bottom")
+          .transformed(offset=(0, 0, bracket_h*0.8), rotate=(90, 0, 0))
+          .rarray(d1, 1, 2, 1)
+          .circle(5/2).cutThruAll()
 
           )
 
