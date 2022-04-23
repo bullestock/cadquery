@@ -110,5 +110,18 @@ cutout = (cq.Workplane("ZY")
           )
 
 result = (result - cutout)
-          
+
+# mount
+mount_h = 12
+mount_w = width - 2*th
+mount_d = bot_depth - 10
+mount = (cq.Workplane("XY")
+         .transformed(offset=(th, -width+(width-mount_w)/2, -(mount_h-th)))
+         .box(mount_d, mount_w, mount_h, centered=False)
+         .faces("<Z or >Z")
+         .shell(-th)
+         )
+
+result = (result + mount)
+
 show_object(result)
