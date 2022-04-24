@@ -66,19 +66,42 @@ result = (result
           .rect(disp_h, disp_w)
           .cutBlind(th)
           )
+
+# mount
+mount_th = 5
+mount_h = 12
+mount_w = width - 2*th
+mount_d = bot_depth - 13
+mount = (cq.Workplane("XY")
+         .transformed(offset=(th, -width+(width-mount_w)/2, -(mount_h-th)))
+         .box(mount_d, mount_w, mount_h, centered=False)
+         .faces("<Z or >Z")
+         .shell(-mount_th)
+         )
+
+result = (result + mount)
+
 # screwposts for display
 def make_disp_screwpost(o, xs, ys):
     ovec1 = (disp_y_offset+xs*disp_h_cc_y/2, ys*disp_h_cc_x/2, -2)
     ovec2 = (disp_y_offset+xs*disp_h_cc_y/2, ys*disp_h_cc_x/2, -th)
+    ovec3 = (disp_y_offset+xs*disp_h_cc_y/2, ys*disp_h_cc_x/2, -10)
     return (o
+            # stud
             .workplaneFromTagged("front")
             .transformed(offset=ovec1)
             .circle(3)
             .extrude(-3.5)
+            # screw hole
             .workplaneFromTagged("front")
             .transformed(offset=ovec2)
             .circle(1.25)
             .cutBlind(-10)
+            # screwdriver hole
+            .workplaneFromTagged("front")
+            .transformed(offset=ovec3)
+            .circle(3.25)
+            .cutBlind(-100)
             )
 
 result = make_disp_screwpost(result, -1, -1)
@@ -110,18 +133,5 @@ cutout = (cq.Workplane("ZY")
           )
 
 result = (result - cutout)
-
-# mount
-mount_h = 12
-mount_w = width - 2*th
-mount_d = bot_depth - 10
-mount = (cq.Workplane("XY")
-         .transformed(offset=(th, -width+(width-mount_w)/2, -(mount_h-th)))
-         .box(mount_d, mount_w, mount_h, centered=False)
-         .faces("<Z or >Z")
-         .shell(-th)
-         )
-
-result = (result + mount)
 
 show_object(result)
