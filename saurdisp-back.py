@@ -18,7 +18,7 @@ back_th = 9
 
 def make_tab(xo):
     tab_x = 3-0.2
-    tab_y = 3-0.5
+    tab_y = 2
     return (cq.Workplane("XY")
             .transformed(offset=(-back_th+tab_x/2, xo*back_w/2+xo*tab_y/2, back_h/2))
             .rect(tab_x, tab_y)
