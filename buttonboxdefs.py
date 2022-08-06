@@ -1,6 +1,6 @@
 # M2x3x5
 insert_l = 5
-insert_r = 1.5
+insert_r = 1.8
 insert_sr = 1
 
 # M3
