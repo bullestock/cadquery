@@ -11,7 +11,7 @@ spout_h = 15
 spout_offset = 4
 
 seal_frac = 0.25
-seal_dia = top_dia - (top_dia - bot_dia)*seal_frac + 0.5
+seal_dia = top_dia - (top_dia - bot_dia)*seal_frac - 0.5
 
 # create path
 path = (cq.Workplane("XY" )
