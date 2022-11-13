@@ -3,7 +3,7 @@ import math
 from cq_server.ui import ui, show_object
 
 top_dia = 19.5
-bot_dia = 18.5
+bot_dia = 18
 h = 20
 spout_id = 5
 spout_od = 7
