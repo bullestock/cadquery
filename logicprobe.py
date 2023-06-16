@@ -1,0 +1,62 @@
+import cadquery as cq
+
+th = 3
+iw = 15.5
+ol = 125
+ih = 2+2+5
+oh = ih + 2*th
+fillet_r = 3
+
+centerXY = (True, True, False)
+
+# make shell
+result = (cq.Workplane("XY")
+         .box(iw + 2*th, ol, ih + 2*th, centered=centerXY)
+         .shell(-th)
+         # round edges
+         .edges("<Z or >Z or |Z").fillet(fillet_r)
+         )
+
+result.faces("<Z").workplane(centerOption="CenterOfMass", 
+                            invert=True).tag("bottom")
+
+result = (result
+          .workplaneFromTagged("bottom")
+          .transformed(offset=(0, 0, oh/2), rotate=(90, 0, 0))
+          .circle(3/2)
+          .cutBlind(ol)
+          )
+
+result = (result
+          .workplaneFromTagged("bottom")
+          .transformed(offset=(0, 0, th+2), rotate=(90, 0, 0))
+          .rect(5.5, 2.5)
+          .cutBlind(-ol)
+          )
+
+result = (result
+          .workplaneFromTagged("bottom")
+          .transformed(offset=(0, 58-80.5, 0))
+          .rarray(iw - 5, 1, 2, 1)
+          .circle(1.5)
+          .extrude(ih)
+          )
+
+
+cut_h = ih + 1
+
+p1 = result.workplaneFromTagged("bottom").workplane(cut_h).split(keepTop=True)
+
+p2 = result.workplaneFromTagged("bottom").workplane(cut_h).split(keepBottom=True)
+
+stud_d = 2
+p1 = (p1
+      .faces("<Z")
+      .workplane(-th)
+      .rarray(iw - stud_d, (ol - 2*th - 2*stud_d)/2, 2, 3)
+      .circle(stud_d/2)
+      .extrude(5)
+     )
+
+#show_object(p1)
+show_object(p2)
