@@ -5,7 +5,7 @@ iw = 15.5
 ol = 125
 ih = 2+2+5
 oh = ih + 2*th
-fillet_r = 3
+fillet_r = 7.49 
 
 centerXY = (True, True, False)
 
@@ -20,6 +20,7 @@ result = (cq.Workplane("XY")
 result.faces("<Z").workplane(centerOption="CenterOfMass", 
                             invert=True).tag("bottom")
 
+# wire hole
 result = (result
           .workplaneFromTagged("bottom")
           .transformed(offset=(0, 0, oh/2), rotate=(90, 0, 0))
@@ -27,16 +28,22 @@ result = (result
           .cutBlind(ol)
           )
 
+# probe hole
 result = (result
           .workplaneFromTagged("bottom")
           .transformed(offset=(0, 0, th+2), rotate=(90, 0, 0))
-          .rect(5.5, 2.5)
+          .rect(5.75, 2.5)
+          .cutBlind(-ol)
+          .workplaneFromTagged("bottom")
+          .transformed(offset=(0, 0, th+3), rotate=(90, 0, 0))
+          .circle(1)
           .cutBlind(-ol)
           )
 
+# pcb stops
 result = (result
           .workplaneFromTagged("bottom")
-          .transformed(offset=(0, 58-80.5, 0))
+          .transformed(offset=(0, 58-80.5, 1))
           .rarray(iw - 5, 1, 2, 1)
           .circle(1.5)
           .extrude(ih)
@@ -52,11 +59,16 @@ p1 = result.workplaneFromTagged("bottom").workplane(cut_h).split(keepTop=True)
 p2 = result.workplaneFromTagged("bottom").workplane(cut_h).split(keepBottom=True)
 
 # studs for keeping parts together
-stud_d = 2
+stud_d = 3
 p1 = (p1
-      .faces("<Z")
-      .workplane(-th)
-      .rarray(iw - stud_d, (ol - 2*th - 2*stud_d)/2, 2, 3)
+      .workplaneFromTagged("bottom")
+      .workplane(ih-1)
+      .rarray(iw - stud_d, (ol - 5*th - 2*stud_d)/2, 2, 3)
+      .circle(stud_d/2)
+      .extrude(5)
+      .workplaneFromTagged("bottom")
+      .workplane(ih-1)
+      .rarray(1, ol - 2*th - stud_d, 1, 2)
       .circle(stud_d/2)
       .extrude(5)
      )
@@ -70,11 +82,12 @@ def addtext(o, text, offset):
       .transformed(offset=(4, -ol/2 + offset, oh), rotate=(0, 0, 90))
       .text(text,
             7, 
-            -1,
+            -1.5,
             cut=True,
             halign="center", 
             valign="bottom", 
-            font="Sans", 
+            font="Sans",
+            kind="bold"
        ) 
       )
 
@@ -97,5 +110,5 @@ p1 = addtext(p1, "H", 57.6)
 p1 = addtext(p1, "L", 64.8)
 p1 = addtext(p1, "Z", 71.8)
 
-show_object(p1)
-#show_object(p2)
+#show_object(p1)
+show_object(p2)
