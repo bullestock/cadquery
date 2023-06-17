@@ -43,7 +43,7 @@ result = (result
 # pcb stops
 result = (result
           .workplaneFromTagged("bottom")
-          .transformed(offset=(0, 58-80.5, 1))
+          .transformed(offset=(0, 58-81, 1))
           .rarray(iw - 5, 1, 2, 1)
           .circle(1.5)
           .extrude(ih)
@@ -83,7 +83,7 @@ def addtext(o, text, offset):
       .text(text,
             7, 
             -1.5,
-            cut=True,
+            combine="cut",
             halign="center", 
             valign="bottom", 
             font="Sans",
@@ -110,5 +110,5 @@ p1 = addtext(p1, "H", 57.6)
 p1 = addtext(p1, "L", 64.8)
 p1 = addtext(p1, "Z", 71.8)
 
-#show_object(p1)
-show_object(p2)
+show_object(p1)
+#show_object(p2)
