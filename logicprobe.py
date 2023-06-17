@@ -45,10 +45,13 @@ result = (result
 
 cut_h = ih + 1
 
+# top
 p1 = result.workplaneFromTagged("bottom").workplane(cut_h).split(keepTop=True)
 
+# bottom
 p2 = result.workplaneFromTagged("bottom").workplane(cut_h).split(keepBottom=True)
 
+# studs for keeping parts together
 stud_d = 2
 p1 = (p1
       .faces("<Z")
@@ -58,5 +61,41 @@ p1 = (p1
       .extrude(5)
      )
 
-#show_object(p1)
-show_object(p2)
+# LED holes
+led_d = 2
+
+def addtext(o, text, offset):
+    return (o
+      .workplaneFromTagged("bottom")
+      .transformed(offset=(4, -ol/2 + offset, oh), rotate=(0, 0, 90))
+      .text(text,
+            7, 
+            -1,
+            cut=True,
+            halign="center", 
+            valign="bottom", 
+            font="Sans", 
+       ) 
+      )
+
+p1 = (p1
+      .workplaneFromTagged("bottom")
+      .transformed(offset=(-3.15, -ol/2 + 58.3, 0))
+      .circle(led_d/2)
+      .cutThruAll()
+      .workplaneFromTagged("bottom")
+      .transformed(offset=(-3.15, -ol/2 + 65.3, 0))
+      .circle(led_d/2)
+      .cutThruAll()
+      .workplaneFromTagged("bottom")
+      .transformed(offset=(-3.15, -ol/2 + 72.3, 0))
+      .circle(led_d/2)
+      .cutThruAll()
+     )
+
+p1 = addtext(p1, "H", 57.6)
+p1 = addtext(p1, "L", 64.8)
+p1 = addtext(p1, "Z", 71.8)
+
+show_object(p1)
+#show_object(p2)
