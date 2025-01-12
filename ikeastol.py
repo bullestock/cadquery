@@ -26,8 +26,11 @@ res = (res
        .workplane()
        .circle(d4/2)
        .workplane(d5)
+       .transformed(rotate=(10, 0, 0))
        .circle(d6/2)
        .loft()
+       .faces(">Z")
+    .fillet(1)       
        # inner hole
        .faces("<Z")
        .workplane()
