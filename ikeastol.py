@@ -1,6 +1,6 @@
 import cadquery as cq
 
-d1 = 18
+d1 = 17.7
 d2 = 16
 d3 = 3
 d4 = 22
